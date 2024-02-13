@@ -52,11 +52,29 @@ def create_user():
         return jsonify({"message": "Usuário cadastrado com sucesso"}), 200
     
     return jsonify({"message": "Dados inválidos"}), 400
-        
 
-@app.route("/hello", methods=["GET"])
-def hello():
-    return "HELLOOOOOOOOOOO!"
+@app.route('/user/<int:id_user>', methods=['GET'])
+@login_required
+def read_user(id_user):
+    user = User.query.get(id_user)
+    
+    if user:
+        return {"username": user.username}
+    
+    return jsonify({"message": "Usuário não encontrado"}), 404
+
+@app.route('/user/<int:id_user>', methods=['PUT'])
+@login_required
+def update_user(id_user):
+    user = User.query.get(id_user)
+    
+    if user:
+        return jsonify({"message": f"Usuário {id_user} atualizado com suceso"}), 200
+
+    return jsonify({"message": "Usuário não encontrado"}), 404
+
+
+        
 
 if __name__ == '__main__':
     app.run(debug=True)
